@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configurar grilla</title>
+  <style>
+    :root { --fondo:#f7f6f3; --caja:#fff; --texto:#1f1f1f; --suave:#6b6b6b; --borde:#e3e2de; --acento:#1f1f1f; --ok:#1b7f3b; --mal:#b42318; }
+    @media (prefers-color-scheme: dark) {
+      :root { --fondo:#191919; --caja:#232323; --texto:#ededed; --suave:#9b9b9b; --borde:#333; --acento:#ededed; --ok:#5fd38a; --mal:#ff8a80; }
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body { background: var(--fondo); color: var(--texto); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 32px 16px 64px; }
+    .contenedor { max-width: 980px; margin: 0 auto; display: grid; grid-template-columns: 1fr 400px; gap: 28px; align-items: start; }
+    @media (max-width: 860px) { .contenedor { grid-template-columns: 1fr; } }
+    h1 { font-size: 26px; letter-spacing: -.4px; margin-bottom: 4px; }
+    .sub { color: var(--suave); margin-bottom: 24px; }
+    .paso { background: var(--caja); border: 1px solid var(--borde); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+    .paso h2 { font-size: 15px; display: flex; gap: 10px; align-items: center; margin-bottom: 4px; }
+    .num { width: 24px; height: 24px; border-radius: 50%; background: var(--acento); color: var(--fondo); display: inline-grid; place-items: center; font-size: 13px; flex: none; }
+    .ayuda { color: var(--suave); font-size: 13px; margin: 0 0 10px 34px; }
+    input, select { width: 100%; font: inherit; color: var(--texto); background: var(--fondo); border: 1px solid var(--borde); border-radius: 10px; padding: 10px 12px; }
+    input:focus, select:focus { outline: 2px solid var(--acento); outline-offset: -1px; }
+    .fila { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    @media (max-width: 560px) { .fila { grid-template-columns: 1fr; } }
+    label.chico { display: block; font-size: 12px; color: var(--suave); margin-bottom: 4px; font-weight: 600; }
+    button { font: inherit; font-weight: 600; border: 0; border-radius: 10px; padding: 10px 16px; cursor: pointer; background: var(--acento); color: var(--fondo); }
+    button.sec { background: transparent; color: var(--texto); border: 1px solid var(--borde); }
+    .msg { margin-top: 10px; font-size: 14px; }
+    .msg.ok { color: var(--ok); } .msg.mal { color: var(--mal); }
+    .resultado { display: flex; gap: 8px; }
+    .resultado input { font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+    .vista { position: sticky; top: 16px; }
+    .vista iframe { width: 100%; height: 760px; border: 1px solid var(--borde); border-radius: 14px; background: #fff; }
+    .vista p { color: var(--suave); font-size: 13px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <div>
+      <h1>Configurá tu grilla</h1>
+      <p class="sub">Tres pasos. Al final copiás un link y lo pegás en Notion.</p>
+
+      <div class="paso">
+        <h2><span class="num">1</span>Link de tu calendario</h2>
+        <p class="ayuda">En Notion, abrí la base del calendario. Arriba a la derecha: ··· y "Copiar link a la vista".</p>
+        <input id="cal" placeholder="https://www.notion.so/..." autocomplete="off">
+      </div>
+
+      <div class="paso">
+        <h2><span class="num">2</span>Link de tu base Perfil</h2>
+        <p class="ayuda">Igual que el paso 1, pero con la base Perfil (foto, bio, destacadas).</p>
+        <input id="perfil" placeholder="https://www.notion.so/..." autocomplete="off">
+        <div style="margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+          <button id="probar">Probar conexión</button>
+          <span class="msg" id="msg"></span>
+        </div>
+      </div>
+
+      <div class="paso">
+        <h2><span class="num">3</span>Elegí cliente y estilo</h2>
+        <p class="ayuda">Un link por cliente. Repetí este paso para cada una.</p>
+        <div class="fila">
+          <div><label class="chico" for="cliente">Cliente</label>
+            <select id="cliente"><option value="">Todos / una sola cuenta</option></select></div>
+          <div><label class="chico" for="filas">Posts</label>
+            <select id="filas"><option value="3">9 posts</option><option value="4">12 posts</option></select></div>
+          <div><label class="chico" for="tema">Tema</label>
+            <select id="tema"><option value="auto">Automático</option><option value="claro">Claro</option><option value="oscuro">Oscuro</option></select></div>
+        </div>
+        <p class="ayuda" style="margin:14px 0 6px">Tu link para Notion:</p>
+        <div class="resultado">
+          <input id="link" readonly>
+          <button id="copiar">Copiar</button>
+        </div>
+        <p class="msg" id="msg-copia"></p>
+      </div>
+    </div>
+
+    <div class="vista">
+      <p>Vista previa</p>
+      <iframe id="previa" title="Vista previa de la grilla"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const limpiarId = (v) => {
+      if (!v) return "";
+      const m = v.split("?")[0].split("#")[0].replace(/-/g, "").match(/[0-9a-f]{32}(?!.*[0-9a-f]{32})/i);
+      return m ? m[0] : "";
+    };
+
+    function armarLink() {
+      const q = new URLSearchParams();
+      const cal = limpiarId($("cal").value), perfil = limpiarId($("perfil").value);
+      if (cal) q.set("cal", cal);
+      if (perfil) q.set("perfil", perfil);
+      if ($("cliente").value) q.set("cliente", $("cliente").value);
+      if ($("filas").value === "4") q.set("filas", "4");
+      if ($("tema").value !== "auto") q.set("tema", $("tema").value);
+      const link = location.origin + "/" + (q.toString() ? "?" + q : "");
+      $("link").value = link;
+      return link;
+    }
+
+    let timer;
+    function actualizar() {
+      armarLink();
+      clearTimeout(timer);
+      timer = setTimeout(() => { $("previa").src = $("link").value; }, 400);
+    }
+
+    async function probar() {
+      const msg = $("msg");
+      const cal = limpiarId($("cal").value);
+      if (!cal) { msg.className = "msg mal"; msg.textContent = "Ese link de calendario no parece de Notion."; return; }
+      msg.className = "msg"; msg.textContent = "Probando…";
+      const q = new URLSearchParams({ cal });
+      const perfil = limpiarId($("perfil").value);
+      if (perfil) q.set("perfil", perfil);
+      try {
+        const res = await fetch("/api/notion?" + q, { cache: "no-store" });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.mensaje);
+        const sel = $("cliente"), previo = sel.value;
+        sel.innerHTML = '<option value="">Todos / una sola cuenta</option>' +
+          data.clientes.map((c) => `<option>${c.replace(/</g, "&lt;")}</option>`).join("");
+        if (data.clientes.includes(previo)) sel.value = previo;
+        else if (data.clientes.length) sel.value = data.clientes[0];
+        msg.className = "msg ok";
+        msg.textContent = `Conectado. ${data.posts.length} posts` + (data.clientes.length ? `, ${data.clientes.length} clientes.` : ".");
+        actualizar();
+      } catch (e) {
+        msg.className = "msg mal";
+        msg.textContent = e.message || "No pude conectar.";
+      }
+    }
+
+    ["cal", "perfil"].forEach((id) => $(id).addEventListener("input", actualizar));
+    ["cliente", "filas", "tema"].forEach((id) => $(id).addEventListener("change", actualizar));
+    $("probar").addEventListener("click", probar);
+    $("copiar").addEventListener("click", async () => {
+      const link = armarLink();
+      try { await navigator.clipboard.writeText(link); }
+      catch { $("link").select(); document.execCommand("copy"); }
+      $("msg-copia").className = "msg ok";
+      $("msg-copia").textContent = "Copiado. En Notion escribí /embed y pegalo.";
+    });
+    actualizar();
+  </script>
+</body>
+</html>

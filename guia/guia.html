@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía Grilla IG</title>
+<style>
+  :root { --fondo:#fbfaf7; --texto:#1c1c1c; --suave:#666; --borde:#e6e3dc; --caja:#fff; --acento:#c84b7a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fondo:#161616; --texto:#eee; --suave:#a3a3a3; --borde:#2e2e2e; --caja:#1f1f1f; --acento:#f08cb2; } }
+  :root[data-theme="dark"] { --fondo:#161616; --texto:#eee; --suave:#a3a3a3; --borde:#2e2e2e; --caja:#1f1f1f; --acento:#f08cb2; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--fondo); color:var(--texto); font:17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 16px 80px; }
+  h1 { font-size: 38px; line-height: 1.1; letter-spacing: -.8px; margin: 0 0 10px; }
+  h2 { font-size: 24px; letter-spacing: -.3px; margin: 56px 0 6px; display:flex; gap:12px; align-items:center; }
+  h2 .n { flex:none; width:34px; height:34px; border-radius:50%; background:var(--acento); color:#fff; display:grid; place-items:center; font-size:16px; }
+  h3 { font-size: 18px; margin: 28px 0 4px; }
+  .bajada { color: var(--suave); font-size: 19px; margin: 0 0 24px; }
+  .tiempo { color: var(--suave); font-size: 14px; margin: 0 0 14px 46px; }
+  ol { padding-left: 22px; } li { margin: 6px 0; }
+  code, .k { font-family: ui-monospace, Menlo, monospace; font-size: 14px; background: var(--caja); border: 1px solid var(--borde); border-radius: 6px; padding: 1px 6px; }
+  .nota { background: var(--caja); border: 1px solid var(--borde); border-left: 4px solid var(--acento); border-radius: 10px; padding: 12px 16px; margin: 18px 0; }
+  figure { margin: 20px 0; }
+  figure img { width: 100%; border: 1px solid var(--borde); border-radius: 12px; display: block; }
+  figure.angosta img { max-width: 360px; margin: 0 auto; }
+  figcaption { color: var(--suave); font-size: 14px; text-align: center; margin-top: 6px; }
+  .par { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .par { grid-template-columns: 1fr; } h1 { font-size: 30px; } }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 12px 0; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+  th { font-size: 13px; color: var(--suave); text-transform: uppercase; letter-spacing: .4px; }
+  .indice { background: var(--caja); border: 1px solid var(--borde); border-radius: 14px; padding: 16px 20px; }
+  .indice ol { margin: 0; }
+  a { color: var(--acento); }
+  @media print { h2 { break-after: avoid; } figure { break-inside: avoid; } main { padding-top: 0; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Tu grilla de Instagram dentro de Notion</h1>
+  <p class="bajada">Guía de instalación. Se hace UNA vez, unos 15 minutos. Todo gratis, sin código.</p>
+
+  <figure class="angosta"><img src="capturas/02-claro-9.png" alt="Grilla terminada"><figcaption>Así queda: tu perfil con los posts de tu calendario.</figcaption></figure>
+
+  <div class="indice">
+    <b>Qué vas a necesitar</b>
+    <ol>
+      <li>Cuenta de Notion (la gratis sirve).</li>
+      <li>Cuenta de GitHub (gratis). Es donde se guarda tu copia del widget.</li>
+      <li>Cuenta de Netlify (gratis). Es la que publica tu link.</li>
+    </ol>
+  </div>
+
+  <h2><span class="n">1</span>Duplicá la plantilla de Notion</h2>
+  <p class="tiempo">1 minuto</p>
+  <ol>
+    <li>Abrí el link de la plantilla que vino con tu compra.</li>
+    <li>Arriba a la derecha tocá <b>Duplicar</b> y elegí tu espacio de trabajo.</li>
+    <li>Vas a tener dos bases: <b>Calendario</b> y <b>Perfil</b>.</li>
+  </ol>
+  <div class="nota">¿Ya tenés tu calendario? Podés usarlo. Solo tiene que tener las columnas de la tabla del final. Los nombres pueden variar un poco: el widget también reconoce "Imagen", "Cover", "Cuenta", "Formato".</div>
+
+  <h2><span class="n">2</span>Creá la integración de Notion</h2>
+  <p class="tiempo">2 minutos</p>
+  <p>Notion no deja que nadie lea tus páginas sin permiso. La integración ES ese permiso. Es gratis.</p>
+  <ol>
+    <li>Entrá a <a href="https://www.notion.so/profile/integrations" target="_blank">notion.so/profile/integrations</a>.</li>
+    <li>Tocá <b>Nueva integración</b>.</li>
+    <li>Nombre: <span class="k">Grilla IG</span>. Espacio de trabajo: el tuyo. Tipo: <b>Interna</b>. Guardar.</li>
+    <li>Copiá el <b>Secreto de integración interna</b> (empieza con <code>ntn_</code>). Guardalo en una nota, lo usás en el paso 4.</li>
+  </ol>
+  <div class="nota">Ese secreto es como una contraseña. No lo compartas ni lo pegues en Notion.</div>
+
+  <h2><span class="n">3</span>Dale acceso a tus bases</h2>
+  <p class="tiempo">1 minuto</p>
+  <ol>
+    <li>Abrí la página donde están tus bases Calendario y Perfil.</li>
+    <li>Arriba a la derecha: <b>···</b> y después <b>Conexiones</b>.</li>
+    <li>Buscá <b>Grilla IG</b> y confirmá.</li>
+  </ol>
+  <div class="nota">Si las bases están en páginas distintas, repetí esto en cada una. Es el error más común: si el widget dice "No encuentro la base", es esto.</div>
+
+  <h2><span class="n">4</span>Publicá tu widget en Netlify</h2>
+  <p class="tiempo">3 minutos</p>
+  <ol>
+    <li>Tocá el botón <b>Deploy to Netlify</b> que vino con tu compra.</li>
+    <li>Entrá con tu cuenta de GitHub (o creala ahí mismo).</li>
+    <li>Netlify te pide <b>NOTION_TOKEN</b>: pegá el secreto del paso 2.</li>
+    <li>Tocá <b>Save &amp; Deploy</b> y esperá un minuto.</li>
+    <li>Te da un link tipo <code>nombre-raro-123.netlify.app</code>. Ese es TU widget.</li>
+  </ol>
+  <h3>Opcional: un nombre más lindo</h3>
+  <p>En Netlify: <b>Site configuration</b>, <b>Change site name</b>. Ej: <code>grilla-estudioluz.netlify.app</code>.</p>
+  <figure class="angosta"><img src="capturas/01-demo.png" alt="Widget en modo demo"><figcaption>Si abrís tu link ahora, ves la DEMO. Es normal: falta conectar tu calendario.</figcaption></figure>
+
+  <h2><span class="n">5</span>Conectá tu calendario</h2>
+  <p class="tiempo">2 minutos</p>
+  <ol>
+    <li>Abrí tu link agregando <code>/setup.html</code> al final. Ej: <code>grilla-estudioluz.netlify.app/setup.html</code></li>
+    <li>En Notion, abrí la base Calendario: <b>···</b> arriba a la derecha y <b>Copiar link a la vista</b>. Pegalo en el paso 1.</li>
+    <li>Lo mismo con la base Perfil, en el paso 2.</li>
+    <li>Tocá <b>Probar conexión</b>. Tiene que decir "Conectado".</li>
+    <li>Elegí cliente, cantidad de posts y tema. La vista previa se actualiza sola.</li>
+    <li>Tocá <b>Copiar</b>.</li>
+  </ol>
+  <figure><img src="capturas/06-setup.png" alt="Página de configuración"><figcaption>Pegás dos links, probás, elegís y copiás.</figcaption></figure>
+
+  <h2><span class="n">6</span>Pegalo en Notion</h2>
+  <p class="tiempo">1 minuto</p>
+  <ol>
+    <li>En la página de tu calendario escribí <code>/embed</code> y Enter.</li>
+    <li>Pegá el link y tocá <b>Insertar enlace</b>.</li>
+    <li>Arrastrá el bloque al costado del calendario para tenerlos en dos columnas.</li>
+    <li>Estirá el bloque desde el borde de abajo hasta que se vea la grilla entera.</li>
+  </ol>
+
+  <h2><span class="n">7</span>Una grilla para cada cliente</h2>
+  <ol>
+    <li>En el Calendario, cada post lleva su <b>Cliente</b>.</li>
+    <li>En Perfil, una fila por cliente con el MISMO nombre.</li>
+    <li>Volvé a <code>/setup.html</code>, elegí otro cliente, copiá y pegá ese link en la página de ese cliente.</li>
+  </ol>
+  <div class="par">
+    <figure><img src="capturas/02-claro-9.png" alt="Cliente 1"><figcaption>Cliente 1</figcaption></figure>
+    <figure><img src="capturas/04-otro-cliente.png" alt="Cliente 2"><figcaption>Cliente 2, mismo calendario</figcaption></figure>
+  </div>
+
+  <h2><span class="n">8</span>El día a día</h2>
+  <table>
+    <tr><th>Querés</th><th>Hacés</th></tr>
+    <tr><td>Ver un post nuevo</td><td>Subí la imagen en <b>Portada</b> y tocá <b>Refresh</b>.</td></tr>
+    <tr><td>Cambiar el orden</td><td>Cambiá la <b>Fecha</b>. El más nuevo va arriba.</td></tr>
+    <tr><td>Fijar un post</td><td>Tildá <b>Fijado</b>. Hasta 3. Destildalo para sacarlo.</td></tr>
+    <tr><td>Ver 12 en vez de 9</td><td>Tocá <b>12</b> arriba del widget.</td></tr>
+    <tr><td>Modo oscuro</td><td>Tocá la luna.</td></tr>
+    <tr><td>Cambiar bio, foto o destacadas</td><td>Editá la fila en <b>Perfil</b> y tocá Refresh.</td></tr>
+    <tr><td>Abrir un post</td><td>Tocalo en la grilla: abre su página de Notion.</td></tr>
+  </table>
+  <div class="par">
+    <figure><img src="capturas/03-oscuro-12.png" alt="Modo oscuro con 12 posts"><figcaption>Modo oscuro, 12 posts</figcaption></figure>
+    <figure><img src="capturas/02-claro-9.png" alt="Modo claro con 9 posts"><figcaption>Modo claro, 9 posts</figcaption></figure>
+  </div>
+
+  <h2><span class="n">9</span>Si algo no anda</h2>
+  <table>
+    <tr><th>Dice</th><th>Solución</th></tr>
+    <tr><td>"No encuentro la base…"</td><td>Te falta el paso 3: conectá la integración a esa base.</td></tr>
+    <tr><td>"El token no es válido"</td><td>En Netlify: Site configuration, Environment variables, NOTION_TOKEN. Pegá el secreto de nuevo y en Deploys tocá "Trigger deploy".</td></tr>
+    <tr><td>"No es una base de datos"</td><td>Copiaste el link de la página, no de la base. Abrí la base y usá "Copiar link a la vista".</td></tr>
+    <tr><td>"Imagen vencida"</td><td>Notion renueva las imágenes cada hora. Tocá Refresh.</td></tr>
+    <tr><td>Un post no aparece</td><td>Le falta la Portada o el Cliente está escrito distinto.</td></tr>
+    <tr><td>El perfil sale vacío</td><td>El nombre del cliente en Perfil tiene que ser igual al del Calendario.</td></tr>
+  </table>
+  <figure><img src="capturas/05-error.png" alt="Ejemplo de mensaje de error"><figcaption>Los errores aparecen arriba, en rojo, y dicen qué hacer.</figcaption></figure>
+
+  <h2><span class="n">10</span>Columnas que lee el widget</h2>
+  <h3>Calendario</h3>
+  <table>
+    <tr><th>Columna</th><th>Tipo</th><th>Para qué</th></tr>
+    <tr><td>Nombre</td><td>Título</td><td>Nombre del post</td></tr>
+    <tr><td>Fecha</td><td>Fecha</td><td>Orden de la grilla</td></tr>
+    <tr><td>Portada</td><td>Archivos</td><td>La imagen de la grilla</td></tr>
+    <tr><td>Cliente</td><td>Selección</td><td>Separa grillas</td></tr>
+    <tr><td>Fijado</td><td>Casilla</td><td>Fija arriba (máx. 3)</td></tr>
+    <tr><td>Tipo</td><td>Selección</td><td>Post, Carrusel o Reel</td></tr>
+  </table>
+  <h3>Perfil</h3>
+  <table>
+    <tr><th>Columna</th><th>Tipo</th><th>Para qué</th></tr>
+    <tr><td>Cliente</td><td>Título</td><td>Igual que en el Calendario</td></tr>
+    <tr><td>Usuario</td><td>Texto</td><td>El @ (sin la arroba)</td></tr>
+    <tr><td>Nombre</td><td>Texto</td><td>Nombre visible</td></tr>
+    <tr><td>Categoría</td><td>Texto</td><td>Ej: Estética (opcional)</td></tr>
+    <tr><td>Bio</td><td>Texto</td><td>Con saltos de línea</td></tr>
+    <tr><td>Link</td><td>URL</td><td>Tu web o link de bio</td></tr>
+    <tr><td>Foto</td><td>Archivos</td><td>Foto de perfil</td></tr>
+    <tr><td>Publicaciones, Seguidores, Seguidos</td><td>Número</td><td>Si dejás Publicaciones vacío, cuenta los posts</td></tr>
+    <tr><td>Destacadas</td><td>Archivos</td><td>Una imagen por destacada. El nombre del archivo es el título: <code>Tips.png</code></td></tr>
+  </table>
+</main>
+</body>
+</html>

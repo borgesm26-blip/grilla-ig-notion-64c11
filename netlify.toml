@@ -1,0 +1,10 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# El botón "Deploy to Netlify" pide estos datos en pantalla.
+[template.environment]
+  NOTION_TOKEN = "Tu token de integración de Notion (empieza con ntn_)"
