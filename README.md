@@ -3,7 +3,7 @@
 Tu feed de Instagram dentro de Notion, armado directo desde tu calendario de contenido.
 Sin rehacer la grilla en Canva cada vez que cambiás algo.
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/TU_USUARIO/grilla-ig-notion)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/borgesm26-blip/grilla-ig-notion)
 
 ## Qué hace
 
